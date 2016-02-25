@@ -101,7 +101,7 @@ public class CurvesPanel extends JPanel {
 			Double minX = r1.getMinX();
 			Double maxX = r1.getMaxX();
 			this.currentSetting = new Settings(minX,maxX,minY,maxY,1,1);
-			//skalierung berechnen
+			//skalierung berechnen und wieder ändern
 		}
 
 		if (p2 != null) {
