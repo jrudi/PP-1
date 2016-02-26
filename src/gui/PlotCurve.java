@@ -47,7 +47,7 @@ public class PlotCurve extends JFrame {
     }
 	
     /* Klasse fuer Panel mit Buttons zur Auswahl, ob Daten oder relative Aenderungen 
-     * als Kurve angezeigt werden sollen
+     * als Kurve angezeigt werden sollen Test
      */
     private class ControlPanel extends JPanel{
     	private static final long serialVersionUID = 1L;
