@@ -42,4 +42,14 @@ public class TestData {
 		return dIarray;
 	}
 	
+	/*public static void main(String[] args) {
+		parser.StoxxParser sP = new parser.StoxxParser("ESTOXX50.csv");
+		sP.parseFile();
+		int i=1;
+		for(DataItem a : sP.dataList){
+			System.out.println(a + "   " + i);
+			i++;
+		}
+	}*/
+	
 }
