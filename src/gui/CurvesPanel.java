@@ -6,13 +6,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+
 import java.awt.Shape;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 
@@ -54,11 +51,10 @@ public class CurvesPanel extends JPanel {
 	}
 
 	public void paint(Graphics g) {
-		this.setBackground(new Color(0,0,0));
+		this.setBackground(new Color(100,100,100));
 		switch (this.currentCurve) {
 		case ORIG_CURVE:
 			currentSetting = s1;
-			
 			break;
 		case L_CURVE:
 			currentSetting = s2;
@@ -68,50 +64,102 @@ public class CurvesPanel extends JPanel {
 			break;
 		}
 		
-		Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2 = (Graphics2D) g;	
+		
+		//Draw the Background
+		g2.setColor(Color.CYAN.brighter());
+		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
+		
 		AffineTransform at = new AffineTransform();
-		at.setToScale(3,5);
-		path_1 = at.createTransformedShape(p1);
-		path_2 = at.createTransformedShape(p2);
-		g2.draw(path_1);
-	}
+		
+		switch(this.currentCurve){
+		case ORIG_CURVE:
+
+			at.setToScale(currentSetting.scaleX*2,currentSetting.scaleY);
+			path_1 = at.createTransformedShape(p1);
+			
+			g2.setColor(Color.GRAY);
+			g2.draw(path_1);
+			break;
+		case L_CURVE:
+			
+			g2.setColor(Color.BLACK);
+			g2.drawLine(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+						
+			at.setToScale(currentSetting.scaleX,currentSetting.scaleY);
+			path_2 = at.createTransformedShape(p2);
+
+			g2.setColor(Color.GRAY);
+			g2.draw(path_2);
+			break;
+		default:
+			
+			break;
+		}
+			
+		}
+		
+	
 
 	public void mapDataToCurve(DataItem[] data) {
+		double max = 0;
+		double min = 0;
+		for (DataItem item :data){
+			if (item.getLevel()>max) max = item.getLevel();
+			if (item.getLevel()<min) min = item.getLevel();
+		}
+		
+		
 		GeneralPath p = new GeneralPath();
-		p.moveTo(0,data[0].getLevel());
-				
+		p.moveTo(0,max/data[0].getLevel());
+		
+		
 		for (int i=1;i<data.length;i++) {
-			p.lineTo(i/*data[i].dayDiff(data[i-1])*/, data[i].getLevel());
+			
+			p.lineTo(i, max-data[i].getLevel());
 			i++;
 		}
+		p.moveTo(0,max-data[0].getLevel());
+		System.out.println(this.getHeight() + " width: " + this.getWidth());
+		
 		p.closePath();
 		this.p1 = p;
 	}
 
 	private void calcRelVerlusteCurve(DataItem[] data) {
 		GeneralPath p = new GeneralPath();
-		p.moveTo(0, 0);
+		p.moveTo(0,data[0].getLevel()+this.getHeight()/2);
 		for (int i = 1; i < data.length; i++) {
-			p.lineTo(i, data[i].getLevel() - data[i - 1].getLevel());
+			p.lineTo(i*2, data[i].getLevel() - data[i - 1].getLevel()+this.getHeight()/2);
 
 		}
+		p.moveTo(0,data[0].getLevel()+this.getHeight()/2);
 		p.closePath();
 		this.p2 = p;
 	}
 
 	private void updateSettings() {
 		if (path_1 != null) {
-			Rectangle2D r1 = path_1.getBounds2D();
-			Double minY = r1.getMinY();
-			Double maxY = r1.getMaxY();
-			Double minX = r1.getMinX();
-			Double maxX = r1.getMaxX();
-			this.currentSetting = new Settings(minX,maxX,minY,maxY,1,1);
-			//skalierung berechnen und wieder ändern
-		}
+			double maxY = p1.getBounds().getMaxY();
+			double minY = p1.getBounds().getMinY();
+			double maxX = p1.getBounds().getMaxX();
+			double minX = p1.getBounds().getMinX();
+			System.out.println("maxy: " + maxY + "minY: " + minY + "\n maxX: " + maxX + "minX: " + minX);
+			double panWid = this.getWidth();
+			double panLen = this.getHeight();
+			s1 = new Settings(minX,maxX,minY,maxY,panLen/(maxX),panWid/(maxY-minY));
+			}
+		
 
 		if (p2 != null) {
-
+			double maxY = p1.getBounds().getMaxY();
+			double minY = p1.getBounds().getMinY();
+			double maxX = p1.getBounds().getMaxX();
+			double minX = p1.getBounds().getMinX();
+			System.out.println("maxy: " + maxY + "minY: " + minY + "\n maxX: " + maxX + "minX: " + minX);
+			//double panWid = this.getWidth();
+			double panLen = this.getHeight();
+			s2 = new Settings(minX,maxX,minY,maxY,panLen/(maxX),1);
 		}
 	}
 

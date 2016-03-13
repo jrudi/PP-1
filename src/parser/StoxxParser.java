@@ -41,7 +41,7 @@ public class StoxxParser extends Parser{
 		} catch (FileNotFoundException e) {
 			System.out.println("'" + this.filename + "' was not found.");
 			e.printStackTrace();
-			s.nextLine();
+			
 		}
 		while(s.hasNextLine()){
 			parseList.add(s.nextLine());
@@ -51,7 +51,7 @@ public class StoxxParser extends Parser{
 			try {
 				this.parseLine(this.parseList.get(i));
 			} catch (DataParseException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
