@@ -67,7 +67,7 @@ public class CurvesPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;	
 		
 		//Draw the Background
-		g2.setColor(Color.CYAN.brighter());
+		g2.setColor(Color.CYAN.brighter().brighter());
 		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		AffineTransform at = new AffineTransform();
@@ -84,13 +84,14 @@ public class CurvesPanel extends JPanel {
 		case L_CURVE:
 			
 			g2.setColor(Color.BLACK);
-			g2.drawLine(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+			g2.drawLine(0, this.getHeight()/2*(int)currentSetting.scaleY, this.getWidth(), this.getHeight()/2*(int)currentSetting.scaleY);
 						
 			at.setToScale(currentSetting.scaleX,currentSetting.scaleY);
 			path_2 = at.createTransformedShape(p2);
 
 			g2.setColor(Color.GRAY);
 			g2.draw(path_2);
+			
 			break;
 		default:
 			
@@ -130,7 +131,7 @@ public class CurvesPanel extends JPanel {
 		GeneralPath p = new GeneralPath();
 		p.moveTo(0,data[0].getLevel()+this.getHeight()/2);
 		for (int i = 1; i < data.length; i++) {
-			p.lineTo(i*2, data[i].getLevel() - data[i - 1].getLevel()+this.getHeight()/2);
+			p.lineTo(i, (data[i].getLevel() - data[i - 1].getLevel())+this.getHeight()/2);
 
 		}
 		p.moveTo(0,data[0].getLevel()+this.getHeight()/2);
@@ -157,9 +158,9 @@ public class CurvesPanel extends JPanel {
 			double maxX = p1.getBounds().getMaxX();
 			double minX = p1.getBounds().getMinX();
 			System.out.println("maxy: " + maxY + "minY: " + minY + "\n maxX: " + maxX + "minX: " + minX);
-			//double panWid = this.getWidth();
+			
 			double panLen = this.getHeight();
-			s2 = new Settings(minX,maxX,minY,maxY,panLen/(maxX),1);
+			s2 = new Settings(minX,maxX,minY,maxY,2,1);
 		}
 	}
 
