@@ -54,10 +54,11 @@ public class CurvesPanel extends JPanel {
 	}
 
 	public void paint(Graphics g) {
-		this.setBackground(new Color(255,0,0));
+		this.setBackground(new Color(0,0,0));
 		switch (this.currentCurve) {
 		case ORIG_CURVE:
 			currentSetting = s1;
+			
 			break;
 		case L_CURVE:
 			currentSetting = s2;
@@ -66,19 +67,24 @@ public class CurvesPanel extends JPanel {
 			currentSetting = new Settings(0, width, 0, height, 1.0f, 1.0f);
 			break;
 		}
-
+		
 		Graphics2D g2 = (Graphics2D) g;
-
+		AffineTransform at = new AffineTransform();
+		at.setToScale(3,5);
+		path_1 = at.createTransformedShape(p1);
+		path_2 = at.createTransformedShape(p2);
+		g2.draw(path_1);
 	}
 
 	public void mapDataToCurve(DataItem[] data) {
 		GeneralPath p = new GeneralPath();
-		p.moveTo(0, 0);
-		int i = 0;
-		for (DataItem item : data) {
-			p.lineTo(i * 2, item.getLevel());
+		p.moveTo(0,data[0].getLevel());
+				
+		for (int i=1;i<data.length;i++) {
+			p.lineTo(i/*data[i].dayDiff(data[i-1])*/, data[i].getLevel());
 			i++;
 		}
+		p.closePath();
 		this.p1 = p;
 	}
 
@@ -86,16 +92,16 @@ public class CurvesPanel extends JPanel {
 		GeneralPath p = new GeneralPath();
 		p.moveTo(0, 0);
 		for (int i = 1; i < data.length; i++) {
-			p.lineTo(i * 2, data[i].getLevel() - data[i - 1].getLevel());
+			p.lineTo(i, data[i].getLevel() - data[i - 1].getLevel());
 
 		}
-
+		p.closePath();
 		this.p2 = p;
 	}
 
 	private void updateSettings() {
-		if (p1 != null) {
-			Rectangle2D r1 = p1.getBounds2D();
+		if (path_1 != null) {
+			Rectangle2D r1 = path_1.getBounds2D();
 			Double minY = r1.getMinY();
 			Double maxY = r1.getMaxY();
 			Double minX = r1.getMinX();

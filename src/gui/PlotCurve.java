@@ -42,6 +42,7 @@ public class PlotCurve extends JFrame {
     private void createComponents(){
     	this.cp = new CurvesPanel();
     	this.getContentPane().add(cp,BorderLayout.CENTER);
+    	this.cp.setVisible(true);
     	this.control = new ControlPanel();
     	this.getContentPane().add(control,BorderLayout.SOUTH);
     }
